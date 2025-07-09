@@ -3,17 +3,27 @@ package server
 import (
 	"net/http"
 	"time"
+
+	"github.com/Pur1st2EpicONE/butter-planner/pkg/handler"
+	"github.com/Pur1st2EpicONE/butter-planner/pkg/repository"
+	"github.com/Pur1st2EpicONE/butter-planner/pkg/service"
 )
 
 type Server struct {
 	httpServer *http.Server
 }
 
-func (s *Server) Run() error {
-	return s.httpServer.ListenAndServe()
+func ServerPrep(port string) *Server {
+	repo := repository.NewRepository()
+	service := service.NewService(repo)
+	handler := handler.NewHandler(service)
+	router := handler.InitRoutes()
+	server := new(Server)
+	server.initServer(port, router)
+	return server
 }
 
-func (s *Server) InitServer(port string, handler http.Handler) error {
+func (s *Server) initServer(port string, handler http.Handler) {
 	s.httpServer = &http.Server{
 		Addr:           ":" + port,
 		Handler:        handler,
@@ -21,5 +31,8 @@ func (s *Server) InitServer(port string, handler http.Handler) error {
 		WriteTimeout:   10 * time.Second,
 		MaxHeaderBytes: 1 << 20,
 	}
-	return nil
+}
+
+func (s *Server) Run() error {
+	return s.httpServer.ListenAndServe()
 }

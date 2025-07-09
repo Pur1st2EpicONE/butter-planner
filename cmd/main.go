@@ -11,13 +11,9 @@ func main() {
 	logger := initLogger()
 	slog.SetDefault(logger)
 
-	server, err := server.ServerPrep("8080")
-	if err != nil {
-		slog.Error("Couldn't prepare the server", slog.String("err", err.Error()))
-		os.Exit(1)
-	}
+	srv := server.ServerPrep("8080")
 
-	if err := server.Run(); err != nil {
+	if err := srv.Run(); err != nil {
 		slog.Error("Couldn't start the server", slog.String("err", err.Error()))
 		os.Exit(1)
 	}

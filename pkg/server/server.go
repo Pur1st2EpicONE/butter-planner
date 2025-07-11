@@ -13,17 +13,17 @@ type Server struct {
 	httpServer *http.Server
 }
 
-func ServerPrep(port string) *Server {
+func InitServer(port string) *Server {
 	repo := repository.NewRepository()
 	service := service.NewService(repo)
 	handler := handler.NewHandler(service)
 	router := handler.InitRoutes()
 	server := new(Server)
-	server.initServer(port, router)
+	server.serverPrep(port, router)
 	return server
 }
 
-func (s *Server) initServer(port string, handler http.Handler) {
+func (s *Server) serverPrep(port string, handler http.Handler) {
 	s.httpServer = &http.Server{
 		Addr:           ":" + port,
 		Handler:        handler,

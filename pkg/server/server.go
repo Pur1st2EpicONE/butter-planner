@@ -7,14 +7,15 @@ import (
 	"github.com/Pur1st2EpicONE/butter-planner/pkg/handler"
 	"github.com/Pur1st2EpicONE/butter-planner/pkg/repository"
 	"github.com/Pur1st2EpicONE/butter-planner/pkg/service"
+	"github.com/jmoiron/sqlx"
 )
 
 type Server struct {
 	httpServer *http.Server
 }
 
-func InitServer(port string) *Server {
-	repo := repository.NewRepository()
+func InitServer(port string, db *sqlx.DB) *Server {
+	repo := repository.NewRepository(db)
 	service := service.NewService(repo)
 	handler := handler.NewHandler(service)
 	router := handler.InitRoutes()

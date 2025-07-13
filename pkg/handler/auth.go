@@ -5,5 +5,5 @@ import (
 )
 
 func (h *Handler) signUp(c *gin.Context) {
-	c.String(200, "TEST")
+	c.String(200, "db connected, server works")
 }

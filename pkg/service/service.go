@@ -1,14 +1,18 @@
 package service
 
-import "github.com/Pur1st2EpicONE/butter-planner/pkg/repository"
+import (
+	butterplanner "github.com/Pur1st2EpicONE/butter-planner"
+	"github.com/Pur1st2EpicONE/butter-planner/pkg/repository"
+)
 
-type ServiceAuthorizer interface {
+type ServiceProvider interface {
+	CreateUser(user butterplanner.User) (int, error)
 }
 
 type Service struct {
-	ServiceAuthorizer
+	ServiceProvider
 }
 
-func NewService(repo *repository.Repository) *Service {
-	return &Service{}
+func NewService(storage *repository.Storage) *Service {
+	return &Service{ServiceProvider: NewAuthService(storage)}
 }

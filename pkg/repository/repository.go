@@ -1,14 +1,18 @@
 package repository
 
-import "github.com/jmoiron/sqlx"
+import (
+	butterplanner "github.com/Pur1st2EpicONE/butter-planner"
+	"github.com/jmoiron/sqlx"
+)
 
-type ReposAuthorizer interface {
+type Storer interface {
+	CreateUser(user butterplanner.User) (int, error)
 }
 
-type Repository struct {
-	ReposAuthorizer
+type Storage struct {
+	Storer
 }
 
-func NewRepository(db *sqlx.DB) *Repository {
-	return &Repository{}
+func NewStorage(db *sqlx.DB) *Storage {
+	return &Storage{Storer: NewPostgresStorage(db)}
 }

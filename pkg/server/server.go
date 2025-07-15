@@ -15,8 +15,8 @@ type Server struct {
 }
 
 func InitServer(port string, db *sqlx.DB) *Server {
-	repo := repository.NewRepository(db)
-	service := service.NewService(repo)
+	storage := repository.NewStorage(db)
+	service := service.NewService(storage)
 	handler := handler.NewHandler(service)
 	router := handler.InitRoutes()
 	server := new(Server)

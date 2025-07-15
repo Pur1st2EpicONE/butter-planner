@@ -16,7 +16,7 @@ type Config struct {
 }
 
 func ConnectPostgres(config Config) (*sqlx.DB, error) {
-	db, err := sqlx.Open("postgres", fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s  sslmode=%s",
+	db, err := sqlx.Open("postgres", fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s sslmode=%s",
 		config.Host, config.Port, config.Username, config.Password, config.DBName, config.SSLMode))
 	if err != nil {
 		return nil, err

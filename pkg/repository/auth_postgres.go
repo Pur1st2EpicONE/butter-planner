@@ -13,11 +13,11 @@ func NewPostgresStorage(db *sqlx.DB) *PostgresStorage {
 	return &PostgresStorage{db: db}
 }
 
-func (r *PostgresStorage) CreateUser(user butterplanner.User) (int, error) {
+func (ps *PostgresStorage) CreateUser(user butterplanner.User) (int, error) {
 	var id int
 	query := "INSERT INTO users (name, last_name, username, password) VALUES ($1, $2, $3, $4) RETURNING id"
 
-	row := r.db.QueryRow(query, user.Name, user.Last_name, user.Username, user.Password)
+	row := ps.db.QueryRow(query, user.Name, user.Last_name, user.Username, user.Password)
 	if err := row.Scan(&id); err != nil {
 		return 0, err
 	}

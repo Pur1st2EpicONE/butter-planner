@@ -3,6 +3,7 @@ module github.com/Pur1st2EpicONE/butter-planner
 go 1.23.5
 
 require (
+	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/gin-gonic/gin v1.10.1
 	github.com/jmoiron/sqlx v1.4.0
 	github.com/joho/godotenv v1.5.1

@@ -7,6 +7,7 @@ import (
 
 type Storer interface {
 	CreateUser(user butterplanner.User) (int, error)
+	GetUserId(user butterplanner.LoginPassword) (int, error)
 }
 
 type Storage struct {

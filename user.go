@@ -1,11 +1,11 @@
 package butterplanner
 
 type User struct {
-	Id        int    `json:"-"`
-	Name      string `json:"name" binding:"required"`
-	Last_name string `json:"last_name" binding:"required"`
-	Username  string `json:"username" binding:"required"`
-	Password  string `json:"password" binding:"required"`
+	Id        int    `form:"-" json:"-"`
+	Name      string `form:"name" json:"name" binding:"required"`
+	Last_name string `form:"last_name" json:"last_name" binding:"required"`
+	Username  string `form:"username" json:"username" binding:"required"`
+	Password  string `form:"password" json:"password" binding:"required"`
 }
 
 type LoginPassword struct {

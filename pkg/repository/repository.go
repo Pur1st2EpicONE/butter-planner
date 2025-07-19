@@ -10,10 +10,17 @@ type Storer interface {
 	GetUserId(user butterplanner.LoginPassword) (int, error)
 }
 
+type NoteMaker interface {
+	CreateNote(userId int, note butterplanner.Note) (int, error)
+	GetAllNotes(userId int) ([]butterplanner.Note, error)
+}
+
 type Storage struct {
 	Storer
+	NoteMaker
 }
 
 func NewStorage(db *sqlx.DB) *Storage {
-	return &Storage{Storer: NewPostgresStorage(db)}
+	return &Storage{Storer: NewPostgresStorer(db),
+		NoteMaker: NewPostgresNoteMaker(db)}
 }

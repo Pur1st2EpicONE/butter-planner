@@ -12,3 +12,10 @@ type LoginPassword struct {
 	Username string `json:"username" binding:"required"`
 	Password string `json:"password" binding:"required"`
 }
+
+type Note struct {
+	Id      int    `json:"-"`
+	UserId  int    `json:"-"`
+	Title   string `json:"title"`
+	Content string `json:"content"`
+}

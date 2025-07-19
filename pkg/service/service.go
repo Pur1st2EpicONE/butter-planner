@@ -12,10 +12,17 @@ type ServiceProvider interface {
 	ParseToken(token string) (int, error)
 }
 
+type NoteServiceProvider interface {
+	CreateNote(userId int, note butterplanner.Note) (int, error)
+	GetAllNotes(userId int) ([]butterplanner.Note, error)
+}
+
 type Service struct {
 	ServiceProvider
+	NoteServiceProvider
 }
 
 func NewService(storage *repository.Storage) *Service {
-	return &Service{ServiceProvider: NewAuthService(storage)}
+	return &Service{ServiceProvider: NewAuthService(storage),
+		NoteServiceProvider: NewNoteService(storage.NoteMaker)}
 }

@@ -30,7 +30,8 @@ func (h *Handler) InitRoutes() *gin.Engine {
 	}
 	lists := router.Group("/lists", h.authorizeUser)
 	{
-		lists.GET("/", h.getAllLists)
+		lists.GET("/", h.getAllNotes)
+		lists.POST("/", h.addNewNote)
 	}
 	return router
 }

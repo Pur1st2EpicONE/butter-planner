@@ -6,15 +6,15 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
-type PostgresStorage struct {
+type PostgresStorer struct {
 	db *sqlx.DB
 }
 
-func NewPostgresStorage(db *sqlx.DB) *PostgresStorage {
-	return &PostgresStorage{db: db}
+func NewPostgresStorer(db *sqlx.DB) *PostgresStorer {
+	return &PostgresStorer{db: db}
 }
 
-func (ps *PostgresStorage) CreateUser(user butterplanner.User) (int, error) {
+func (ps *PostgresStorer) CreateUser(user butterplanner.User) (int, error) {
 	var id int
 
 	query := "INSERT INTO users (name, last_name, username, password) VALUES ($1, $2, $3, $4) RETURNING id"
@@ -26,7 +26,7 @@ func (ps *PostgresStorage) CreateUser(user butterplanner.User) (int, error) {
 	return id, nil
 }
 
-func (ps *PostgresStorage) GetUserId(user butterplanner.LoginPassword) (int, error) {
+func (ps *PostgresStorer) GetUserId(user butterplanner.LoginPassword) (int, error) {
 	var id int
 	var passHash string
 

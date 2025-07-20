@@ -3,7 +3,6 @@ package handler
 import (
 	"log/slog"
 	"net/http"
-	"strings"
 
 	butterplanner "github.com/Pur1st2EpicONE/butter-planner"
 	"github.com/gin-gonic/gin"
@@ -17,20 +16,20 @@ func (h *Handler) signUp(c *gin.Context) {
 		return
 	}
 
-	id, err := h.service.ServiceProvider.CreateUser(userInfo)
+	_, err := h.service.ServiceProvider.CreateUser(userInfo) // TODO: drop ID return from CreateUser
 	if err != nil {
 		errorResponse(c, http.StatusInternalServerError, err.Error())
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"id": id})
+	c.Redirect(http.StatusSeeOther, "/")
 }
 
 func (h *Handler) signIn(c *gin.Context) {
 	var userInfo butterplanner.LoginPassword
 	var userId int
 
-	if err := c.BindJSON(&userInfo); err != nil {
+	if err := c.ShouldBind(&userInfo); err != nil {
 		errorResponse(c, http.StatusBadRequest, err.Error())
 		return
 	}
@@ -47,34 +46,39 @@ func (h *Handler) signIn(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"token": token})
+	c.SetCookie("token", token, 3600, "/", "", false, true)
+	c.Redirect(http.StatusSeeOther, "/notes")
 }
 
 func (h *Handler) authorizeUser(c *gin.Context) {
-	header := c.GetHeader("Authorization")
-	if header == "" {
-		errorResponse(c, http.StatusUnauthorized, "empty auth header")
+	token, err := c.Cookie("token")
+	if err != nil {
+		errorResponse(c, http.StatusUnauthorized, "missing token")
 		return
 	}
 
-	headerParts := strings.Split(header, " ")
-	if len(headerParts) != 2 || headerParts[0] != "Bearer" {
-		errorResponse(c, http.StatusUnauthorized, "invalid auth header")
-		return
-	}
-
-	if len(headerParts[1]) == 0 {
-		errorResponse(c, http.StatusUnauthorized, "token is empty")
-		return
-	}
-
-	userId, err := h.service.ServiceProvider.ParseToken(headerParts[1])
+	userId, err := h.service.ServiceProvider.ParseToken(token) // TODO: move to a separate function
 	if err != nil {
 		errorResponse(c, http.StatusUnauthorized, err.Error())
 		return
 	}
 
 	c.Set("userId", userId)
+}
+
+func (h *Handler) isUserLoggedIn(c *gin.Context) bool {
+	token, err := c.Cookie("token")
+	if err != nil {
+		return false
+	}
+
+	_, err = h.service.ServiceProvider.ParseToken(token)
+	return err == nil
+}
+
+func (h *Handler) logout(c *gin.Context) {
+	c.SetCookie("token", "", -1, "/", "", false, true)
+	c.Redirect(http.StatusSeeOther, "/")
 }
 
 func errorResponse(c *gin.Context, statusCode int, message string) {

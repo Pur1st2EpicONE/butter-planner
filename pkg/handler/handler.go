@@ -1,8 +1,6 @@
 package handler
 
 import (
-	"net/http"
-
 	"github.com/Pur1st2EpicONE/butter-planner/pkg/service"
 	"github.com/gin-gonic/gin"
 )
@@ -18,17 +16,18 @@ func NewHandler(service *service.Service) *Handler {
 func (h *Handler) InitRoutes() *gin.Engine {
 	router := gin.New()
 	router.LoadHTMLGlob("templates/*")
-
+	router.GET("/", h.showHomePage)
 	auth := router.Group("/auth")
 	{
-		auth.GET("/sign-up", func(c *gin.Context) {
-			c.HTML(http.StatusOK, "signup.html", nil)
-		})
 		auth.POST("/sign-up", h.signUp)
+		auth.GET("/sign-up", h.showSignUpPage)
 
 		auth.POST("/sign-in", h.signIn)
+		auth.GET("/sign-in", h.showSignInPage)
+
+		auth.POST("/logout", h.logout)
 	}
-	lists := router.Group("/lists", h.authorizeUser)
+	lists := router.Group("/notes", h.authorizeUser)
 	{
 		lists.GET("/", h.getAllNotes)
 		lists.POST("/", h.addNewNote)

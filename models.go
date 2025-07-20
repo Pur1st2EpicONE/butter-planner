@@ -9,8 +9,8 @@ type User struct {
 }
 
 type LoginPassword struct {
-	Username string `json:"username" binding:"required"`
-	Password string `json:"password" binding:"required"`
+	Username string `form:"username" json:"username" binding:"required"`
+	Password string `form:"password" json:"password" binding:"required"`
 }
 
 type Note struct {

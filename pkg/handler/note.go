@@ -45,7 +45,9 @@ func (h *Handler) getAllNotes(c *gin.Context) {
 		errorResponse(c, http.StatusInternalServerError, err.Error())
 		return
 	}
-	c.JSON(http.StatusOK, AllNotes{AllNotes: notes})
+	c.HTML(http.StatusOK, "notes.html", gin.H{
+		"Notes": notes,
+	})
 }
 
 func getContextId(c *gin.Context) (int, error) {

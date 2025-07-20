@@ -1,17 +1,8 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="UTF-8">
-    <title>Sign Up</title>
-</head>
-<body>
-    <h1>Registration</h1>
-    <form action="/auth/sign-up" method="POST">
-        <label>Name: <input type="text" name="name"></label><br>
-        <label>Last Name: <input type="text" name="last_name"></label><br>
-        <label>Username: <input type="text" name="username"></label><br>
-        <label>Password: <input type="password" name="password"></label><br>
-        <button type="submit">Register</button>
-    </form>
-</body>
-</html>
+<h2>Sign Up</h2>
+<form action="/auth/sign-up" method="POST">
+    <label>Name: <input type="text" name="name" required></label><br>
+    <label>Last Name: <input type="text" name="last_name" required></label><br>
+    <label>Username: <input type="text" name="username" required></label><br> 
+    <label>Password: <input type="password" name="password" required></label><br> 
+    <button type="submit">Sign Up</button>
+</form>

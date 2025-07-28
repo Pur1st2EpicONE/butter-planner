@@ -1,8 +1,12 @@
 package main
 
 import (
+	"context"
 	"log/slog"
+	"net/http"
 	"os"
+	"os/signal"
+	"syscall"
 
 	"github.com/Pur1st2EpicONE/butter-planner/pkg/repository"
 	"github.com/Pur1st2EpicONE/butter-planner/pkg/server"
@@ -18,11 +22,23 @@ func main() {
 	if err != nil {
 		logFatal("project init failed", err)
 	}
-
 	srv := server.InitServer(viper.GetString("port"), db)
+	go func() {
+		err := srv.Run()
+		if err != nil && err != http.ErrServerClosed {
+			logFatal("server run failed", err)
+		}
+	}()
+	osSignCh := make(chan os.Signal, 1)
+	signal.Notify(osSignCh, syscall.SIGINT, syscall.SIGTERM)
+	<-osSignCh
 
-	if err := srv.Run(); err != nil {
-		logFatal("server run failed", err)
+	if err := srv.Shutdown(context.Background()); err != nil {
+		logFatal("server shutdown fail", err)
+	}
+
+	if err := db.Close(); err != nil {
+		logFatal("db connection failed to close properly", err)
 	}
 }
 
